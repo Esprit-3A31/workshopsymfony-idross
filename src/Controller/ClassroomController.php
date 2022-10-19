@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClassroomController extends AbstractController
 {
-    #[Route('/classroom', name: 'app_classroom')]
+    #[Route('/classroom', name:'app_classroom')]
     public function index(): Response
     {
         return $this->render('classroom/index.html.twig', [
@@ -28,7 +28,7 @@ class ClassroomController extends AbstractController
       # @Route("/listClassroom", name="listClassroom")
 
 
-    #[Route('/listClassroom', name: 'listClassroom')]
+    #[Route('/listClassroom', name:'listClassroom')]
     public function listClassroom(ClassroomRepository  $repository)
     {
         $Classroom= $repository->findAll();
