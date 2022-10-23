@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ClassroomRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClassroomRepository::class)]
@@ -13,34 +15,33 @@ class Classroom
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
 
-
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $Name = null;
-
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?int $NbrStudent = null;
+
+    #[ORM\OneToMany(mappedBy: 'classroom', targetEntity: Student::class)]
+    private Collection $Student;
+
+    public function __construct()
+    {
+        $this->Student = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $Id): self
-    {
-        $this->Id = $Id;
-
-        return $this;
-    }
-
     public function getName(): ?string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(?string $Name): self
+    public function setName(string $name): self
     {
-        $this->Name = $Name;
+        $this->name = $name;
 
         return $this;
     }
@@ -50,10 +51,44 @@ class Classroom
         return $this->NbrStudent;
     }
 
-    public function setNbrStudent(?int $NbrStudent): self
+    public function setNbrStudent(int $NbrStudent): self
     {
         $this->NbrStudent = $NbrStudent;
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Student>
+     */
+    public function getStudent(): Collection
+    {
+        return $this->Student;
+    }
+
+    public function addStudent(Student $student): self
+    {
+        if (!$this->Student->contains($student)) {
+            $this->Student->add($student);
+            $student->setClassroom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudent(Student $student): self
+    {
+        if ($this->Student->removeElement($student)) {
+            // set the owning side to null (unless already changed)
+            if ($student->getClassroom() === $this) {
+                $student->setClassroom(null);
+            }
+        }
+
+        return $this;
+    }
+   /**public function __toString()
+    {
+        return(String) $this->getName();
+    }**/
 }

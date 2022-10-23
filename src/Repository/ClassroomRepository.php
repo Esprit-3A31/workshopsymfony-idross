@@ -21,7 +21,7 @@ class ClassroomRepository extends ServiceEntityRepository
         parent::__construct($registry, Classroom::class);
     }
 
-    public function add(Classroom $entity, bool $flush = false): void
+    public function save(Classroom $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
